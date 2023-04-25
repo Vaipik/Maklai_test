@@ -11,7 +11,7 @@ healtcheck_router = APIRouter(
 
 
 @healtcheck_router.get(
-    "/",
+    "",
     response_model=HealthCheck,
     status_code=status.HTTP_200_OK
 )
