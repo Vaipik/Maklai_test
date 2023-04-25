@@ -1,4 +1,7 @@
 from fastapi import APIRouter
+from starlette import status
+
+from src.schema.healtcheck import HealthCheck
 
 
 healtcheck_router = APIRouter(
@@ -7,6 +10,10 @@ healtcheck_router = APIRouter(
 )
 
 
-@healtcheck_router.get("/")
+@healtcheck_router.get(
+    "/",
+    response_model=HealthCheck,
+    status_code=status.HTTP_200_OK
+)
 def ping_pong():
-    return {"status": "OK"}
+    return {"status":}
