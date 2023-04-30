@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -6,4 +8,4 @@ class TreeBase(BaseModel):
 
 
 class TreeResponse(BaseModel):
-    response: list[str]
+    paraphrases: list[Optional[TreeBase]]
