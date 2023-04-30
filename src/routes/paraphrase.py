@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
-from src.services.paraphrase.main import paraphrase
+from src.schema.paraphrase import TreeResponse
+from src.services.paraphrase import paraphrases
 
 paraphrase_router = APIRouter(
     prefix="/paraphrase",
@@ -8,6 +9,9 @@ paraphrase_router = APIRouter(
 )
 
 
-@paraphrase_router.get("")
+@paraphrase_router.get(
+    "",
+    response_model=TreeResponse
+)
 def paraphrase(tree: str, limit: int = 20):
-    return paraphrase(tree)
+    return paraphrases(tree, limit)
