@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from src.services.paraphrase.main import base_tree
+from src.services.paraphrase.main import paraphrase
 
 paraphrase_router = APIRouter(
     prefix="/paraphrase",
@@ -10,4 +10,4 @@ paraphrase_router = APIRouter(
 
 @paraphrase_router.get("")
 def paraphrase(tree: str, limit: int = 20):
-    return base_tree(tree)
+    return paraphrase(tree)

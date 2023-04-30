@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class TreeBase(BaseModel):
-    query: str
+    tree: str
 
 
 class TreeResponse(BaseModel):
