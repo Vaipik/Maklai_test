@@ -1,123 +1,79 @@
-from nltk import ParentedTree
+from nltk import MultiParentedTree
 
 from src.services.paraphrase.main import find_pairs_in_node, generate_permutations
 
 
-def test_find_pairs_in_node_ok():
+def test_find_pairs_in_node_with_existing_pairs(node_with_pairs):
     """Test to find pairs that can be shuffled among themselves"""
-    input_node = ParentedTree(
-        'NP',
-        [
-            ParentedTree('NP', [ParentedTree('JJtrendy', []), ParentedTree('NNS', ['bars'])]),
-            ParentedTree(',', [',']),
-            ParentedTree('NP', [ParentedTree('NNS', ['clubs'])]),
-            ParentedTree('CC', ['and']),
-            ParentedTree('NP', [ParentedTree('JJ', ['Catalan']), ParentedTree('NNSrestaurants', [])])
-        ]
-    )
 
-    expected = list(input_node)
+    expected = list(node_with_pairs)
 
-    result = find_pairs_in_node(input_node)
+    result = find_pairs_in_node(node_with_pairs)
     assert result == expected
 
 
-def test_find_pairs_in_node_not_exists():
+def test_find_pairs_in_node_without_pairs(node_without_pairs):
     """If pairs are not exist"""
-    input_node = ParentedTree(
-        'NP',
-        [
-            ParentedTree('NP', [ParentedTree('JJtrendy', []), ParentedTree('NNS', ['bars'])]),
-            ParentedTree('NP', [ParentedTree('NNS', ['clubs'])]),
-            ParentedTree(',', [',']),
-            ParentedTree('CC', ['and']),
-            ParentedTree('NP', [ParentedTree('JJ', ['Catalan']), ParentedTree('NNSrestaurants', [])])
-        ]
-    )
-
     expected = []
 
-    result = find_pairs_in_node(input_node)
+    result = find_pairs_in_node(node_without_pairs)
     assert result == expected
 
 
-def test_find_pairs_in_node_wrong_separator():
+def test_find_pairs_in_node_wrong_separator(node_with_pairs_and_wrong_separator):
     """If pairs are exist but with wrong separator"""
-    input_node = ParentedTree(
-        'NP',
-        [
-            ParentedTree('NP', [ParentedTree('JJtrendy', []), ParentedTree('NNS', ['bars'])]),
-            ParentedTree('JJ', ['Catalan']),
-            ParentedTree('NP', [ParentedTree('NNS', ['clubs'])]),
-            ParentedTree('NNS', ['clubs']),
-            ParentedTree('NP', [ParentedTree('JJ', ['Catalan']), ParentedTree('NNSrestaurants', [])])
-        ]
-    )
     expected = []
 
-    result = find_pairs_in_node(input_node)
+    result = find_pairs_in_node(node_with_pairs_and_wrong_separator)
     assert result == expected
 
 
-def test_generate_permutations():
+def test_generate_permutations(node_with_pairs):
     """
     Test to generate all possible permutations between pairs.
-    In one node possible combinations is n!, where n number of parts than can be mixed.
+    In one node possible combinations is n! - 1, where n number of parts than can be mixed.
     In following test there must be 6 possible pairs for input_data node
     """
-    input_data = [
-        ParentedTree('NP', [ParentedTree('JJtrendy', []), ParentedTree('NNS', ['bars'])]),
-        ParentedTree(',', [',']),
-        ParentedTree('NP', [ParentedTree('NNS', ['clubs'])]),
-        ParentedTree('CC', ['and']),
-        ParentedTree('NP', [ParentedTree('JJ', ['Catalan']), ParentedTree('NNSrestaurants', [])])
-    ]
+    input_data = list(node_with_pairs)
     result = generate_permutations(input_data)
 
     expected = [
         (
-            ParentedTree('NP', [ParentedTree('JJtrendy', []), ParentedTree('NNS', ['bars'])]),
-            ParentedTree(',', [',']),
-            ParentedTree('NP', [ParentedTree('NNS', ['clubs'])]),
-            ParentedTree('CC', ['and']),
-            ParentedTree('NP', [ParentedTree('JJ', ['Catalan']), ParentedTree('NNSrestaurants', [])])
+            MultiParentedTree('NP', [MultiParentedTree('JJtrendy', []), MultiParentedTree('NNS', ['bars'])]),
+            MultiParentedTree(',', [',']),
+            MultiParentedTree('NP', [MultiParentedTree('JJ', ['Catalan']), MultiParentedTree('NNSrestaurants', [])]),
+            MultiParentedTree('CC', ['and']),
+            MultiParentedTree('NP', [MultiParentedTree('NNS', ['clubs'])])
         ),
         (
-            ParentedTree('NP', [ParentedTree('JJtrendy', []), ParentedTree('NNS', ['bars'])]),
-            ParentedTree(',', [',']),
-            ParentedTree('NP', [ParentedTree('JJ', ['Catalan']), ParentedTree('NNSrestaurants', [])]),
-            ParentedTree('CC', ['and']),
-            ParentedTree('NP', [ParentedTree('NNS', ['clubs'])])
+            MultiParentedTree('NP', [MultiParentedTree('NNS', ['clubs'])]),
+            MultiParentedTree(',', [',']),
+            MultiParentedTree('NP', [MultiParentedTree('JJtrendy', []), MultiParentedTree('NNS', ['bars'])]),
+            MultiParentedTree('CC', ['and']),
+            MultiParentedTree('NP', [MultiParentedTree('JJ', ['Catalan']), MultiParentedTree('NNSrestaurants', [])])
         ),
         (
-            ParentedTree('NP', [ParentedTree('NNS', ['clubs'])]),
-            ParentedTree(',', [',']),
-            ParentedTree('NP', [ParentedTree('JJtrendy', []), ParentedTree('NNS', ['bars'])]),
-            ParentedTree('CC', ['and']),
-            ParentedTree('NP', [ParentedTree('JJ', ['Catalan']), ParentedTree('NNSrestaurants', [])])
+            MultiParentedTree('NP', [MultiParentedTree('NNS', ['clubs'])]),
+            MultiParentedTree(',', [',']),
+            MultiParentedTree('NP', [MultiParentedTree('JJ', ['Catalan']), MultiParentedTree('NNSrestaurants', [])]),
+            MultiParentedTree('CC', ['and']),
+            MultiParentedTree('NP', [MultiParentedTree('JJtrendy', []), MultiParentedTree('NNS', ['bars'])])
         ),
         (
-            ParentedTree('NP', [ParentedTree('NNS', ['clubs'])]),
-            ParentedTree(',', [',']),
-            ParentedTree('NP', [ParentedTree('JJ', ['Catalan']), ParentedTree('NNSrestaurants', [])]),
-            ParentedTree('CC', ['and']),
-            ParentedTree('NP', [ParentedTree('JJtrendy', []), ParentedTree('NNS', ['bars'])])
+            MultiParentedTree('NP', [MultiParentedTree('JJ', ['Catalan']), MultiParentedTree('NNSrestaurants', [])]),
+            MultiParentedTree(',', [',']),
+            MultiParentedTree('NP', [MultiParentedTree('JJtrendy', []), MultiParentedTree('NNS', ['bars'])]),
+            MultiParentedTree('CC', ['and']),
+            MultiParentedTree('NP', [MultiParentedTree('NNS', ['clubs'])])
         ),
         (
-            ParentedTree('NP', [ParentedTree('JJ', ['Catalan']), ParentedTree('NNSrestaurants', [])]),
-            ParentedTree(',', [',']),
-            ParentedTree('NP', [ParentedTree('JJtrendy', []), ParentedTree('NNS', ['bars'])]),
-            ParentedTree('CC', ['and']),
-            ParentedTree('NP', [ParentedTree('NNS', ['clubs'])])
-        ),
-        (
-            ParentedTree('NP', [ParentedTree('JJ', ['Catalan']), ParentedTree('NNSrestaurants', [])]),
-            ParentedTree(',', [',']),
-            ParentedTree('NP', [ParentedTree('NNS', ['clubs'])]),
-            ParentedTree('CC', ['and']),
-            ParentedTree('NP', [ParentedTree('JJtrendy', []), ParentedTree('NNS', ['bars'])])
+            MultiParentedTree('NP', [MultiParentedTree('JJ', ['Catalan']), MultiParentedTree('NNSrestaurants', [])]),
+            MultiParentedTree(',', [',']),
+            MultiParentedTree('NP', [MultiParentedTree('NNS', ['clubs'])]),
+            MultiParentedTree('CC', ['and']),
+            MultiParentedTree('NP', [MultiParentedTree('JJtrendy', []), MultiParentedTree('NNS', ['bars'])])
         )
     ]
 
-    assert len(result) == 6
+    assert len(result) == 5
     assert result == expected
