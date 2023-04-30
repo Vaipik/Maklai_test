@@ -18,3 +18,7 @@ dist/
 /.venv/
 /.python-version
 /tools/deploy/temp/
+
+.space
+Spacefile
+requirements.txt
